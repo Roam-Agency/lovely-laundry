@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Pricing — Lovely Laundry, Stockton-on-Tees</title>
+  <meta name="description" content="Full price list for Lovely Laundry: dry cleaning, service wash, ironing, duvets and more. Transparent pricing with no hidden costs. Book a doorstep pickup with The Ironing Man.">
+  <link rel="icon" type="image/webp" href="assets/img/logo.webp">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/styles.css">
+  <style>
+    .pricing-layout { display:grid; grid-template-columns: 1fr 320px; gap: clamp(2rem,4vw,3rem); align-items:start; }
+    .price-search { width:100%; padding:.85rem 1.1rem; border:1.5px solid var(--line); border-radius:var(--r-pill); font-family:var(--font-body); font-size:1rem; margin-bottom:2rem; }
+    .price-search:focus { outline:none; border-color:var(--magenta); }
+    .price-group { margin-bottom:2.2rem; }
+    .price-group h2 { font-size:1.5rem; color:var(--magenta); padding-bottom:.5rem; border-bottom:2px solid var(--lime); display:inline-block; }
+    .price-sub { font-family:var(--font-display); font-weight:500; margin:1.2rem 0 .3rem; color:var(--ink); }
+    .price-row { display:flex; justify-content:space-between; gap:1rem; padding:.5rem 0; border-bottom:1px dashed var(--line); font-size:.96rem; }
+    .price-row.indent { padding-left:1.2rem; color:var(--ink-soft); }
+    .price-row .amt { font-family:var(--font-display); font-weight:500; color:var(--ink); white-space:nowrap; }
+    .price-aside { position:sticky; top:90px; background:#fff; border:1px solid var(--line); border-radius:var(--r-lg); padding:1.8rem; box-shadow:var(--shadow-md); text-align:center; }
+    .price-aside img { height:120px; margin:0 auto 1rem; }
+    .price-aside h3 { font-size:1.3rem; }
+    .price-aside p { color:var(--ink-soft); font-size:.95rem; }
+    .price-aside .btn { width:100%; justify-content:center; margin-top:.6rem; }
+    .no-results { color:var(--ink-soft); font-style:italic; padding:1rem 0; display:none; }
+    @media (max-width:860px){ .pricing-layout{ grid-template-columns:1fr; } .price-aside{ position:static; } }
+  </style>
+</head>
+<body>
+
+  <div class="topbar">
+    <div class="wrap">
+      <span class="ti"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg> Mon–Thu 8:30am–5pm · Sat 9am–1pm</span>
+      <a class="ti" href="mailto:info@lovely-laundry.co.uk"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg> info@lovely-laundry.co.uk</a>
+      <a class="ti" href="tel:07875665173"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 4h4l2 5-3 2a14 14 0 0 0 6 6l2-3 5 2v4a2 2 0 0 1-2 2A17 17 0 0 1 3 6a2 2 0 0 1 2-2"/></svg> 07875 665173</a>
+      <span class="ti spacer"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s-7-5.5-7-11a7 7 0 0 1 14 0c0 5.5-7 11-7 11Z"/><circle cx="12" cy="10" r="2.5"/></svg> 2 Douglas Close, Stockton-on-Tees TS18 3SB</span>
+    </div>
+  </div>
+
+  <header class="site-header">
+    <nav class="nav wrap" aria-label="Primary">
+      <a class="logo" href="index.html"><img src="assets/img/logo.webp" alt="Lovely Laundry"></a>
+      <button class="nav-toggle" aria-label="Menu" aria-expanded="false"><span></span><span></span><span></span></button>
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a class="active" href="pricing.html">Pricing</a></li>
+        <li><a href="commercial.html">Commercial</a></li>
+        <li><a href="contact.html">Contact</a></li>
+        <li><a href="visit.html">Visit Us</a></li>
+        <li class="nav-cta"><a class="btn btn-primary" href="https://ironing-man.co.uk/book" target="_blank" rel="noopener">Book a Pickup</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <div class="page-hero">
+    <div class="wrap">
+      <span class="eyebrow" style="justify-content:center;">Pricing</span>
+      <h1>Premium laundry. <span class="tint">Unmatched prices.</span></h1>
+      <p>Your time is priceless. Let us do your laundry — folded and pressed. Transparent pricing, no hidden costs.</p>
+    </div>
+  </div>
+
+  <section style="padding-top:2.5rem;">
+    <div class="wrap pricing-layout">
+      <div>
+        <input type="search" class="price-search" id="priceFilter" placeholder="Filter items… (e.g. shirt, duvet, suit)" aria-label="Filter price list">
+        <p class="no-results" id="noResults">No items match your search.</p>
+
+        <div class="price-group">
+          <h2>Dry Cleaning</h2>
+          <div class="price-sub">Dress</div>
+          <div class="price-row indent"><span>Cocktail Dress</span><span class="amt">£22.30</span></div>
+          <div class="price-row indent"><span>Dress</span><span class="amt">£13.70</span></div>
+          <div class="price-row indent"><span>Evening Dress</span><span class="amt">£23.40</span></div>
+          <div class="price-row indent"><span>Karen Millen Dress</span><span class="amt">£22.30</span></div>
+          <div class="price-row indent"><span>Pleated Dress</span><span class="amt">£22.80</span></div>
+          <div class="price-row"><span>Gents Gilet</span><span class="amt">£20.70</span></div>
+          <div class="price-sub">Gents Suit / Tuxedo</div>
+          <div class="price-row indent"><span>Gents 2PC Suit</span><span class="amt">£17.00</span></div>
+          <div class="price-row indent"><span>Gents 3PC Suit</span><span class="amt">£19.70</span></div>
+          <div class="price-row indent"><span>Gents Dinner Suit</span><span class="amt">£22.70</span></div>
+          <div class="price-row indent"><span>Gents Suit Jacket</span><span class="amt">£10.60</span></div>
+          <div class="price-row indent"><span>Gents Tuxedo</span><span class="amt">£23.80</span></div>
+          <div class="price-sub">Blouse</div>
+          <div class="price-row indent"><span>Blouse</span><span class="amt">£10.90</span></div>
+          <div class="price-row"><span>Scarf</span><span class="amt">£9.30</span></div>
+          <div class="price-sub">Child</div>
+          <div class="price-row indent"><span>Childs Coat</span><span class="amt">£9.10</span></div>
+          <div class="price-row indent"><span>Childs Dress</span><span class="amt">£8.00</span></div>
+          <div class="price-row indent"><span>Childs Jacket</span><span class="amt">£8.00</span></div>
+          <div class="price-row indent"><span>Childs Skirt</span><span class="amt">£5.70</span></div>
+          <div class="price-row indent"><span>Childs Suit</span><span class="amt">£10.90</span></div>
+          <div class="price-row indent"><span>Childs Trousers</span><span class="amt">£6.30</span></div>
+          <div class="price-sub">Blanket</div>
+          <div class="price-row indent"><span>Double Blanket</span><span class="amt">£20.50</span></div>
+          <div class="price-row indent"><span>King Blanket</span><span class="amt">£22.80</span></div>
+          <div class="price-row indent"><span>Single Blanket</span><span class="amt">£17.10</span></div>
+          <div class="price-sub">Curtain</div>
+          <div class="price-row indent"><span>Curtain 54&quot;</span><span class="amt">£45.40</span></div>
+          <div class="price-row indent"><span>Curtain 72&quot;</span><span class="amt">£56.40</span></div>
+          <div class="price-row indent"><span>Curtain 84&quot;</span><span class="amt">£67.80</span></div>
+          <div class="price-row indent"><span>Curtain 90&quot;</span><span class="amt">£79.20</span></div>
+          <div class="price-row indent"><span>Curtain pelmets</span><span class="amt">£17.10</span></div>
+          <div class="price-row indent"><span>Curtain Tie Backs</span><span class="amt">£6.30</span></div>
+          <div class="price-sub">Cushion</div>
+          <div class="price-row indent"><span>Large Cushion</span><span class="amt">£11.40</span></div>
+          <div class="price-row indent"><span>Large Cushion Cover</span><span class="amt">£10.20</span></div>
+          <div class="price-row indent"><span>Med Cushion Cover</span><span class="amt">£9.10</span></div>
+          <div class="price-row indent"><span>Medium Cushion</span><span class="amt">£9.10</span></div>
+          <div class="price-row indent"><span>Small Cushion</span><span class="amt">£5.70</span></div>
+          <div class="price-row indent"><span>Sml Cushion Covers</span><span class="amt">£5.70</span></div>
+          <div class="price-row indent"><span>Suite Cushion Cover</span><span class="amt">£9.10</span></div>
+          <div class="price-sub">Gents Coat</div>
+          <div class="price-row indent"><span>Gent Canada Goose</span><span class="amt">£60.00</span></div>
+          <div class="price-row indent"><span>Gent Coat Padded</span><span class="amt">£45.00</span></div>
+          <div class="price-row indent"><span>Gent Leather Coat</span><span class="amt">£51.20</span></div>
+          <div class="price-row indent"><span>Gent Lther 3/4 Coat</span><span class="amt">£55.80</span></div>
+          <div class="price-row indent"><span>Gent Puffa Shrt</span><span class="amt">£34.20</span></div>
+          <div class="price-row indent"><span>Gent Shpskn 3/4 Ct</span><span class="amt">£45.50</span></div>
+          <div class="price-row indent"><span>Gent Suede 3/4 Coat</span><span class="amt">£55.80</span></div>
+          <div class="price-row indent"><span>Gents 3/4 Coat</span><span class="amt">£14.00</span></div>
+          <div class="price-row indent"><span>Gents Coat</span><span class="amt">£17.10</span></div>
+          <div class="price-row"><span>Gents Jumper</span><span class="amt">£10.90</span></div>
+          <div class="price-sub">Jacket</div>
+          <div class="price-row indent"><span>Lady Jacket</span><span class="amt">£10.60</span></div>
+          <div class="price-row indent"><span>Leather Jacket</span><span class="amt">£51.20</span></div>
+          <div class="price-row indent"><span>Linen Jacket</span><span class="amt">£11.40</span></div>
+          <div class="price-row indent"><span>Padded Jacket</span><span class="amt">£39.80</span></div>
+          <div class="price-row"><span>Jumpsuit</span><span class="amt">£22.30</span></div>
+          <div class="price-row"><span>Lady Cardigan</span><span class="amt">£10.90</span></div>
+          <div class="price-sub">Lady Coat</div>
+          <div class="price-row indent"><span>Lady 3/4 Coat</span><span class="amt">£14.30</span></div>
+          <div class="price-row indent"><span>Lady Canada Goose</span><span class="amt">£55.80</span></div>
+          <div class="price-row indent"><span>Lady Coat</span><span class="amt">£17.10</span></div>
+          <div class="price-row indent"><span>Lady Leather Coat</span><span class="amt">£51.20</span></div>
+          <div class="price-row indent"><span>Lady Puffa Ct Lng</span><span class="amt">£39.80</span></div>
+          <div class="price-row indent"><span>Lady Puffa Ct Shrt</span><span class="amt">£34.20</span></div>
+          <div class="price-row indent"><span>Lady Suede 3/4 Coat</span><span class="amt">£45.50</span></div>
+          <div class="price-row indent"><span>Lady Suede Coat</span><span class="amt">£51.20</span></div>
+          <div class="price-row"><span>Lady Jumper</span><span class="amt">£10.90</span></div>
+          <div class="price-row"><span>Long Cardigan</span><span class="amt">£14.50</span></div>
+          <div class="price-row"><span>Playsuit</span><span class="amt">£14.30</span></div>
+          <div class="price-sub">Rug</div>
+          <div class="price-row indent"><span>Extra Large Rug 6x4&lt;</span><span class="amt">£60.00</span></div>
+          <div class="price-row indent"><span>Large Rug 5x3&lt;</span><span class="amt">£40.00</span></div>
+          <div class="price-row indent"><span>Medium Rug 4x3&lt;</span><span class="amt">£35.00</span></div>
+          <div class="price-row indent"><span>Small Rug 3x2&lt;</span><span class="amt">£25.00</span></div>
+          <div class="price-row"><span>Sari</span><span class="amt">£22.80</span></div>
+          <div class="price-row"><span>School Blazer</span><span class="amt">£9.70</span></div>
+          <div class="price-row"><span>Shawl</span><span class="amt">£11.40</span></div>
+          <div class="price-row"><span>Shirt</span><span class="amt">£10.60</span></div>
+          <div class="price-sub">Ski</div>
+          <div class="price-row indent"><span>Gents Ski Suit</span><span class="amt">£28.50</span></div>
+          <div class="price-row indent"><span>Ladies Ski Suit</span><span class="amt">£28.50</span></div>
+          <div class="price-row indent"><span>Ski Glove</span><span class="amt">£4.60</span></div>
+          <div class="price-sub">Skirt</div>
+          <div class="price-row indent"><span>Full Pleated Skirt</span><span class="amt">£22.80</span></div>
+          <div class="price-row indent"><span>Skirt</span><span class="amt">£10.90</span></div>
+          <div class="price-row indent"><span>Skirt Suit</span><span class="amt">£17.00</span></div>
+          <div class="price-row"><span>T-Shirt</span><span class="amt">£10.40</span></div>
+          <div class="price-row"><span>Tie</span><span class="amt">£5.00</span></div>
+          <div class="price-sub">Top</div>
+          <div class="price-row indent"><span>Linen Top</span><span class="amt">£10.60</span></div>
+          <div class="price-row indent"><span>Top</span><span class="amt">£10.90</span></div>
+          <div class="price-sub">Trousers</div>
+          <div class="price-row indent"><span>Gents Trousers</span><span class="amt">£10.60</span></div>
+          <div class="price-row indent"><span>Ladies Trousers</span><span class="amt">£10.60</span></div>
+          <div class="price-row indent"><span>Leather Trousers</span><span class="amt">£45.50</span></div>
+          <div class="price-row indent"><span>Linen Trousers</span><span class="amt">£11.40</span></div>
+          <div class="price-row indent"><span>Lther Ski Trousers</span><span class="amt">£45.50</span></div>
+          <div class="price-row indent"><span>Ski Trousers</span><span class="amt">£22.80</span></div>
+          <div class="price-row indent"><span>Suede Trousers</span><span class="amt">£34.20</span></div>
+          <div class="price-row"><span>Tunic &amp; Trouser</span><span class="amt">£25.90</span></div>
+          <div class="price-row"><span>Waistcoat</span><span class="amt">£7.20</span></div>
+          <div class="price-sub">Wedding</div>
+          <div class="price-row indent"><span>Child Bridesmaid</span><span class="amt">£39.80</span></div>
+          <div class="price-row indent"><span>Mother of Bride 2PC</span><span class="amt">£62.60</span></div>
+          <div class="price-row indent"><span>Veil</span><span class="amt">£17.10</span></div>
+          <div class="price-sub">Sofa</div>
+          <div class="price-row indent"><span>2 Seater Sofa Cover</span><span class="amt">£28.50</span></div>
+          <div class="price-row indent"><span>3 Piece Suite Full Set</span><span class="amt">£102.50</span></div>
+          <div class="price-row indent"><span>3 Seater Sofa Cover</span><span class="amt">£40.00</span></div>
+          <div class="price-row indent"><span>Armchair Cover</span><span class="amt">£17.50</span></div>
+        </div>
+
+        <div class="price-group">
+          <h2>Laundry</h2>
+          <div class="price-row"><span>Cleveland Bay Service Wash</span><span class="amt">£25.00</span></div>
+          <div class="price-row"><span>Service Wash</span><span class="amt">£12.40</span></div>
+          <div class="price-row"><span>Dry Only</span><span class="amt">£10.40</span></div>
+        </div>
+
+        <div class="price-group">
+          <h2>Ironing</h2>
+          <div class="price-row"><span>Basic Ironing</span><span class="amt">£1.20</span></div>
+          <div class="price-row"><span>Child Basic</span><span class="amt">£1.00</span></div>
+          <div class="price-row"><span>Dress P/O</span><span class="amt">£8.30</span></div>
+          <div class="price-sub">Duvet Cover</div>
+          <div class="price-row indent"><span>Double Duv Cov P/O</span><span class="amt">£4.50</span></div>
+          <div class="price-row indent"><span>King Duv Cov P/O</span><span class="amt">£5.30</span></div>
+          <div class="price-row indent"><span>S King Duv Cov P/O</span><span class="amt">£6.00</span></div>
+          <div class="price-row indent"><span>Single Duv Cov P/O</span><span class="amt">£3.70</span></div>
+          <div class="price-row"><span>Pillowcase P/O</span><span class="amt">£1.00</span></div>
+          <div class="price-row"><span>Polo Shirt P/O</span><span class="amt">£2.00</span></div>
+          <div class="price-row"><span>School Shirt</span><span class="amt">£1.60</span></div>
+          <div class="price-sub">Sheets</div>
+          <div class="price-row indent"><span>Double Sheet P/O</span><span class="amt">£3.10</span></div>
+          <div class="price-row indent"><span>Fitted Dbl Sheet</span><span class="amt">£3.80</span></div>
+          <div class="price-row indent"><span>Fitted KS Sheet</span><span class="amt">£4.60</span></div>
+          <div class="price-row indent"><span>Fitted Single Sht</span><span class="amt">£3.10</span></div>
+          <div class="price-row indent"><span>Fitted SKS Sheet</span><span class="amt">£5.30</span></div>
+          <div class="price-row indent"><span>Kingsize Sheet P/O</span><span class="amt">£3.70</span></div>
+          <div class="price-row indent"><span>S King Sheet P/O</span><span class="amt">£4.50</span></div>
+          <div class="price-row indent"><span>Single Sheet P/O</span><span class="amt">£2.40</span></div>
+          <div class="price-row"><span>Shirt/Blouse P/O</span><span class="amt">£2.00</span></div>
+          <div class="price-sub">Tablecloth</div>
+          <div class="price-row indent"><span>Table Cloth LARGE</span><span class="amt">£10.90</span></div>
+          <div class="price-row indent"><span>Tablecloth Med P/O</span><span class="amt">£7.50</span></div>
+          <div class="price-row indent"><span>Tablecloth Sml P/O</span><span class="amt">£4.00</span></div>
+          <div class="price-row indent"><span>Tblcth Rnd Lge P/O</span><span class="amt">£8.20</span></div>
+          <div class="price-row indent"><span>Tblcth Rnd Med P/O</span><span class="amt">£5.50</span></div>
+          <div class="price-row indent"><span>Tblcth Rnd Sml P/O</span><span class="amt">£2.30</span></div>
+          <div class="price-sub">Trousers</div>
+          <div class="price-row indent"><span>Creased Front P/O</span><span class="amt">£5.20</span></div>
+          <div class="price-row indent"><span>Flat Front P/O</span><span class="amt">£2.60</span></div>
+          <div class="price-row"><span>Tunic/Uniform P/O</span><span class="amt">£3.40</span></div>
+        </div>
+
+        <div class="price-group">
+          <h2>Duvets / Quilts</h2>
+          <div class="price-sub">Bedspread</div>
+          <div class="price-row indent"><span>Bedspread Double</span><span class="amt">£20.00</span></div>
+          <div class="price-row indent"><span>Bedspread Kingsize</span><span class="amt">£21.10</span></div>
+          <div class="price-row indent"><span>Bedspread S King</span><span class="amt">£23.40</span></div>
+          <div class="price-row indent"><span>Bedspread Single</span><span class="amt">£18.80</span></div>
+          <div class="price-sub">Duvet</div>
+          <div class="price-row indent"><span>Double Feather Duv</span><span class="amt">£23.00</span></div>
+          <div class="price-row indent"><span>Double Poly Duvet</span><span class="amt">£21.50</span></div>
+          <div class="price-row indent"><span>King Feather Duv</span><span class="amt">£27.00</span></div>
+          <div class="price-row indent"><span>King Poly Duvet</span><span class="amt">£24.90</span></div>
+          <div class="price-row indent"><span>S King Feather Duv</span><span class="amt">£30.00</span></div>
+          <div class="price-row indent"><span>S King Poly Duvet</span><span class="amt">£27.20</span></div>
+          <div class="price-row indent"><span>Single Feather Duv</span><span class="amt">£21.00</span></div>
+          <div class="price-row indent"><span>Single Poly Duvet</span><span class="amt">£19.30</span></div>
+          <div class="price-sub">Pillow</div>
+          <div class="price-row indent"><span>Pillow Feather</span><span class="amt">£8.00</span></div>
+          <div class="price-row indent"><span>Pillow Poly</span><span class="amt">£6.80</span></div>
+        </div>
+      </div>
+
+      <aside class="price-aside">
+        <img src="assets/img/logo.webp" alt="Lovely Laundry">
+        <h3>Rather not carry it in?</h3>
+        <p>Book a doorstep pickup with The Ironing Man — we collect, clean and deliver back, usually within 24 hours.</p>
+        <a class="btn btn-lime" href="https://ironing-man.co.uk/book" target="_blank" rel="noopener">Book a Pickup →</a>
+        <a class="btn btn-ghost" href="contact.html">Contact us</a>
+      </aside>
+    </div>
+  </section>
+
+  <footer class="site-footer">
+    <div class="wrap footer-grid">
+      <div class="footer-brand">
+        <img src="assets/img/logo.webp" alt="Lovely Laundry">
+        <p>Responsible laundry and dry cleaning in Stockton-on-Tees. Now offering doorstep collection &amp; delivery, powered by The Ironing Man.</p>
+      </div>
+      <div>
+        <h4>Site navigation</h4>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="pricing.html">Pricing</a></li>
+          <li><a href="commercial.html">Commercial</a></li>
+          <li><a href="contact.html">Contact</a></li>
+          <li><a href="visit.html">Visit Us</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Book &amp; connect</h4>
+        <ul>
+          <li><a href="https://ironing-man.co.uk/book" target="_blank" rel="noopener">Book a Pickup →</a></li>
+          <li><a href="https://ironing-man.co.uk/" target="_blank" rel="noopener">The Ironing Man</a></li>
+          <li><a href="https://www.facebook.com/LovelyLaundryStockton/" target="_blank" rel="noopener">Facebook</a></li>
+          <li><a href="https://www.instagram.com/lovelylaundryltd/" target="_blank" rel="noopener">Instagram</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="wrap footer-bottom">
+      <span>© 2026 Lovely Laundry, Stockton-on-Tees. Part of the same group as The Ironing Man.</span>
+      <span>2 Douglas Close, Preston Farm Ind Est, TS18 3SB</span>
+    </div>
+  </footer>
+
+  <script src="assets/main.js"></script>
+  <script>
+    // Live price filter — hides non-matching rows and empty groups
+    const filter = document.getElementById('priceFilter');
+    const noResults = document.getElementById('noResults');
+    filter.addEventListener('input', () => {
+      const q = filter.value.trim().toLowerCase();
+      let anyVisible = false;
+      document.querySelectorAll('.price-group').forEach(group => {
+        let groupVisible = false;
+        // rows
+        group.querySelectorAll('.price-row').forEach(row => {
+          const match = !q || row.textContent.toLowerCase().includes(q);
+          row.style.display = match ? '' : 'none';
+          if (match) { groupVisible = true; anyVisible = true; }
+        });
+        // sub-headers: show only if a following row in same sub is visible
+        group.querySelectorAll('.price-sub').forEach(sub => {
+          let n = sub.nextElementSibling, show = false;
+          while (n && n.classList.contains('price-row') && n.classList.contains('indent')) {
+            if (n.style.display !== 'none') { show = true; break; }
+            n = n.nextElementSibling;
+          }
+          sub.style.display = show ? '' : 'none';
+        });
+        group.style.display = groupVisible ? '' : 'none';
+      });
+      noResults.style.display = anyVisible ? 'none' : 'block';
+    });
+  </script>
+</body>
+</html>

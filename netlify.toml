@@ -1,0 +1,18 @@
+[build]
+  publish = "."
+
+[[redirects]]
+  from = "/visit-store"
+  to = "/visit.html"
+  status = 301
+
+[[redirects]]
+  from = "/book"
+  to = "https://ironing-man.co.uk/book"
+  status = 302
+  force = true
+
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"

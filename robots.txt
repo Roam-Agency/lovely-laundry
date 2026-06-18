@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://lovely-laundry.co.uk/sitemap.xml

@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Contact — Lovely Laundry, Stockton-on-Tees</title>
+  <meta name="description" content="Get in touch with Lovely Laundry in Stockton-on-Tees. Call, email or send a message. Or book a doorstep pickup online with The Ironing Man.">
+  <link rel="icon" type="image/webp" href="assets/img/logo.webp">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/styles.css">
+  <style>
+    .contact-grid { display:grid; grid-template-columns:1fr 1fr; gap:clamp(2rem,5vw,3.5rem); align-items:start; }
+    .contact-list { list-style:none; padding:0; margin:0 0 1.5rem; display:grid; gap:1rem; }
+    .contact-list li { display:flex; gap:.8rem; align-items:flex-start; }
+    .contact-list .ic { flex:none; width:42px; height:42px; border-radius:12px; background:var(--cream); color:var(--magenta); display:grid; place-items:center; }
+    .contact-list .ic svg { width:20px; height:20px; }
+    .contact-list a { color:var(--magenta); text-decoration:none; font-weight:500; }
+    .gallery { display:grid; grid-template-columns:1fr 1fr; gap:.8rem; }
+    .gallery img { border-radius:var(--r-md); aspect-ratio:1; object-fit:cover; width:100%; box-shadow:var(--shadow-sm); }
+    .form-grid { display:grid; gap:1rem; }
+    .form-grid label { font-size:.9rem; font-family:var(--font-display); font-weight:500; display:block; margin-bottom:.3rem; }
+    .form-grid input, .form-grid textarea { width:100%; padding:.8rem 1rem; border:1.5px solid var(--line); border-radius:var(--r-sm); font:inherit; }
+    .form-grid input:focus, .form-grid textarea:focus { outline:none; border-color:var(--magenta); }
+    .panel { background:#fff; border:1px solid var(--line); border-radius:var(--r-lg); padding:clamp(1.5rem,3vw,2.2rem); box-shadow:var(--shadow-sm); }
+    .map-wrap { border-radius:var(--r-lg); overflow:hidden; box-shadow:var(--shadow-md); line-height:0; }
+    .map-wrap iframe { width:100%; height:420px; border:0; }
+    @media (max-width:760px){ .contact-grid{ grid-template-columns:1fr; } }
+  </style>
+</head>
+<body>
+
+  <div class="topbar">
+    <div class="wrap">
+      <span class="ti"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg> Mon–Thu 8:30am–5pm · Sat 9am–1pm</span>
+      <a class="ti" href="mailto:info@lovely-laundry.co.uk"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg> info@lovely-laundry.co.uk</a>
+      <a class="ti" href="tel:07875665173"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 4h4l2 5-3 2a14 14 0 0 0 6 6l2-3 5 2v4a2 2 0 0 1-2 2A17 17 0 0 1 3 6a2 2 0 0 1 2-2"/></svg> 07875 665173</a>
+      <span class="ti spacer"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s-7-5.5-7-11a7 7 0 0 1 14 0c0 5.5-7 11-7 11Z"/><circle cx="12" cy="10" r="2.5"/></svg> 2 Douglas Close, Stockton-on-Tees TS18 3SB</span>
+    </div>
+  </div>
+
+  <header class="site-header">
+    <nav class="nav wrap" aria-label="Primary">
+      <a class="logo" href="index.html"><img src="assets/img/logo.webp" alt="Lovely Laundry"></a>
+      <button class="nav-toggle" aria-label="Menu" aria-expanded="false"><span></span><span></span><span></span></button>
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="pricing.html">Pricing</a></li>
+        <li><a href="commercial.html">Commercial</a></li>
+        <li><a class="active" href="contact.html">Contact</a></li>
+        <li><a href="visit.html">Visit Us</a></li>
+        <li class="nav-cta"><a class="btn btn-primary" href="https://ironing-man.co.uk/book" target="_blank" rel="noopener">Book a Pickup</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <div class="page-hero">
+    <div class="wrap">
+      <span class="eyebrow" style="justify-content:center;">Contact</span>
+      <h1>Let's <span class="tint">talk laundry.</span></h1>
+      <p>We recommend calling the store for the quickest, most prompt response — or drop us a message and we'll get back to you.</p>
+    </div>
+  </div>
+
+  <section style="padding-top:2.5rem;">
+    <div class="wrap contact-grid">
+      <div>
+        <ul class="contact-list">
+          <li><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 4h4l2 5-3 2a14 14 0 0 0 6 6l2-3 5 2v4a2 2 0 0 1-2 2A17 17 0 0 1 3 6a2 2 0 0 1 2-2"/></svg></span><div><div style="font-family:var(--font-display);font-weight:500;">Call us</div><a href="tel:07875665173">07875 665173</a></div></li>
+          <li><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg></span><div><div style="font-family:var(--font-display);font-weight:500;">Email us</div><a href="mailto:info@lovely-laundry.co.uk">info@lovely-laundry.co.uk</a></div></li>
+          <li><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s-7-5.5-7-11a7 7 0 0 1 14 0c0 5.5-7 11-7 11Z"/><circle cx="12" cy="10" r="2.5"/></svg></span><div><div style="font-family:var(--font-display);font-weight:500;">Visit the store</div><span style="color:var(--ink-soft);">2 Douglas Close, Preston Farm Ind Est,<br>Stockton-on-Tees TS18 3SB</span></div></li>
+          <li><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span><div><div style="font-family:var(--font-display);font-weight:500;">Opening hours</div><span style="color:var(--ink-soft);">Mon–Thu 8:30am – 5:00pm<br>Sat 9:00am – 1:00pm</span></div></li>
+        </ul>
+        <div class="gallery">
+          <img src="assets/img/folded-stacks.webp" alt="Freshly folded laundry stacks" loading="lazy">
+          <img src="assets/img/steam-iron.webp" alt="Professional steam iron in use" loading="lazy">
+          <img src="assets/img/smartdry-machines.webp" alt="JLA SmartDry machines" loading="lazy">
+          <img src="assets/img/sam-washers.webp" alt="Sam beside the commercial washers" loading="lazy">
+        </div>
+      </div>
+
+      <div class="panel">
+        <h2 style="font-size:1.5rem;">Send us a message</h2>
+        <form class="form-grid" name="contact" method="POST" data-netlify="true" netlify-honeypot="bot-field" style="margin-top:1rem;">
+          <input type="hidden" name="form-name" value="contact">
+          <p hidden><label>Don't fill this out: <input name="bot-field"></label></p>
+          <div><label for="name">Name</label><input id="name" name="name" required></div>
+          <div><label for="email">Email</label><input id="email" type="email" name="email" required></div>
+          <div><label for="phone">Phone number</label><input id="phone" type="tel" name="phone"></div>
+          <div><label for="message">Message</label><textarea id="message" name="message" rows="4" placeholder="Enter your message…" required></textarea></div>
+          <div><button type="submit" class="btn btn-primary">Submit <span class="arr">→</span></button></div>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- Doorstep nudge -->
+  <section class="doorstep" style="margin:1rem 0;">
+    <div class="wrap" style="text-align:center;">
+      <span class="badge" style="margin-inline:auto;">★ Powered by The Ironing Man</span>
+      <h2 style="color:#fff;">Prefer not to come in? We'll come to you.</h2>
+      <p style="margin:0 auto 1.5rem; max-width:52ch;">Book a doorstep collection through The Ironing Man and we'll pick up, clean and deliver back — usually within 24 hours.</p>
+      <a class="btn btn-lime" href="https://ironing-man.co.uk/book" target="_blank" rel="noopener">Book a Pickup <span class="arr">→</span></a>
+    </div>
+  </section>
+
+  <!-- Map -->
+  <section style="padding-top:0;">
+    <div class="wrap">
+      <div class="section-head center"><h2>How to find us</h2></div>
+      <div class="map-wrap">
+        <iframe title="Lovely Laundry location map" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
+          src="https://maps.google.com/maps?q=2%20Douglas%20Close%20Preston%20Farm%20Industrial%20Estate%20Stockton-on-Tees%20TS18%203SB&t=m&z=15&output=embed"></iframe>
+      </div>
+    </div>
+  </section>
+
+  <footer class="site-footer">
+    <div class="wrap footer-grid">
+      <div class="footer-brand">
+        <img src="assets/img/logo.webp" alt="Lovely Laundry">
+        <p>Responsible laundry and dry cleaning in Stockton-on-Tees. Now offering doorstep collection &amp; delivery, powered by The Ironing Man.</p>
+      </div>
+      <div>
+        <h4>Site navigation</h4>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="pricing.html">Pricing</a></li>
+          <li><a href="commercial.html">Commercial</a></li>
+          <li><a href="contact.html">Contact</a></li>
+          <li><a href="visit.html">Visit Us</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Book &amp; connect</h4>
+        <ul>
+          <li><a href="https://ironing-man.co.uk/book" target="_blank" rel="noopener">Book a Pickup →</a></li>
+          <li><a href="https://ironing-man.co.uk/" target="_blank" rel="noopener">The Ironing Man</a></li>
+          <li><a href="https://www.facebook.com/LovelyLaundryStockton/" target="_blank" rel="noopener">Facebook</a></li>
+          <li><a href="https://www.instagram.com/lovelylaundryltd/" target="_blank" rel="noopener">Instagram</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="wrap footer-bottom">
+      <span>© 2026 Lovely Laundry, Stockton-on-Tees. Part of the same group as The Ironing Man.</span>
+      <span>2 Douglas Close, Preston Farm Ind Est, TS18 3SB</span>
+    </div>
+  </footer>
+
+  <script src="assets/main.js"></script>
+</body>
+</html>
