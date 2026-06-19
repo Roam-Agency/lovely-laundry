@@ -211,6 +211,12 @@ section { padding: clamp(3rem, 7vw, 5.5rem) 0; }
   .hero-media img { aspect-ratio: 16 / 10; max-height: 46vh; }
 }
 
+/* Tablets: single-column but tall viewports, so cap the hero photo to a
+   compact height (in line with the desktop and mobile treatment). */
+@media (min-width: 601px) and (max-width: 860px) {
+  .hero-media img { max-height: 360px; }
+}
+
 /* ---------- Doorstep band (signature CTA) ---------- */
 .doorstep {
   background: var(--grad-brand);
