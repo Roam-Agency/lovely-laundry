@@ -1,16 +1,24 @@
 [build]
   publish = "."
 
+# Legacy path -> Visit Us page
 [[redirects]]
   from = "/visit-store"
   to = "/visit.html"
   status = 301
 
+# Convenience shortcut to the booking flow
 [[redirects]]
   from = "/book"
   to = "https://ironing-man.co.uk/book"
   status = 302
   force = true
+
+# Original source images are committed for reference only — not for public serving
+[[redirects]]
+  from = "/Images/*"
+  to = "/index.html"
+  status = 404
 
 [[headers]]
   for = "/assets/*"
