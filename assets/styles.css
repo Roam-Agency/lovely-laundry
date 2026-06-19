@@ -192,7 +192,8 @@ section { padding: clamp(3rem, 7vw, 5.5rem) 0; }
 .hero-media img {
   width: 100%; border-radius: var(--r-lg);
   box-shadow: var(--shadow-lg);
-  aspect-ratio: 4 / 3.2; object-fit: cover;
+  /* Shorter landscape crop (matches mobile) with a cap so it stays balanced against the copy */
+  aspect-ratio: 16 / 10; object-fit: cover; max-height: 440px;
 }
 .hero-media .blob {
   position: absolute; inset: -8% -6% auto auto; width: 62%; aspect-ratio: 1;
