@@ -130,6 +130,7 @@ h1, h2, h3, h4 {
 .site-header {
   position: sticky; top: 0; z-index: 50;
   background: rgba(255,255,255,.9);
+  -webkit-backdrop-filter: blur(10px);
   backdrop-filter: blur(10px);
   border-bottom: 1px solid var(--line);
 }
@@ -159,10 +160,10 @@ h1, h2, h3, h4 {
     background: #fff; padding: 1rem; gap: .2rem;
     border-bottom: 1px solid var(--line);
     box-shadow: var(--shadow-md);
-    transform: translateY(-8px); opacity: 0; pointer-events: none;
-    transition: .2s;
+    transform: translateY(-8px); opacity: 0; pointer-events: none; visibility: hidden;
+    transition: transform .2s, opacity .2s, visibility .2s;
   }
-  .nav-links.open { transform: none; opacity: 1; pointer-events: auto; }
+  .nav-links.open { transform: none; opacity: 1; pointer-events: auto; visibility: visible; }
   .nav-links a { padding: .8rem 1rem; }
   .nav-cta { margin: .4rem 0 0; }
 }
