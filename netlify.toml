@@ -20,7 +20,26 @@
   to = "/index.html"
   status = 404
 
+# CSS and JS keep stable filenames (no build-time hashing), so they must
+# revalidate — otherwise "immutable" pins returning visitors to stale styles.
+# Cache-busting is handled with a ?v= query on the <link>/<script> tags.
 [[headers]]
-  for = "/assets/*"
+  for = "/assets/styles.css"
   [headers.values]
-    Cache-Control = "public, max-age=31536000, immutable"
+    Cache-Control = "public, max-age=0, must-revalidate"
+
+[[headers]]
+  for = "/assets/main.js"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
+
+# Images and icons change rarely — cache for a week, but never "immutable".
+[[headers]]
+  for = "/assets/img/*"
+  [headers.values]
+    Cache-Control = "public, max-age=604800"
+
+[[headers]]
+  for = "/assets/icons/*"
+  [headers.values]
+    Cache-Control = "public, max-age=604800"
