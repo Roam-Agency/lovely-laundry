@@ -206,6 +206,8 @@ section { padding: clamp(3rem, 7vw, 5.5rem) 0; }
 @media (max-width: 860px) {
   .hero-grid { grid-template-columns: 1fr; }
   .hero-media { order: -1; }
+  /* Shorter landscape crop so the hero photo doesn't fill the screen on phones */
+  .hero-media img { aspect-ratio: 16 / 10; max-height: 46vh; }
 }
 
 /* ---------- Doorstep band (signature CTA) ---------- */
@@ -266,7 +268,7 @@ section { padding: clamp(3rem, 7vw, 5.5rem) 0; }
 .split-body ul { list-style: none; padding: 0; margin: 1.2rem 0 1.6rem; display: grid; gap: .7rem; }
 .split-body li { display: flex; gap: .6rem; align-items: flex-start; }
 .split-body li svg { flex: none; width: 20px; height: 20px; color: var(--lime-deep); margin-top: .25rem; }
-@media (max-width: 760px){ .split { grid-template-columns: 1fr; } .split.flip .split-media { order: -1; } }
+@media (max-width: 760px){ .split { grid-template-columns: 1fr; } .split.flip .split-media { order: -1; } .split-media img { aspect-ratio: 16 / 10; max-height: 42vh; } }
 
 /* ---------- Pricing teaser cards ---------- */
 .price-cards { display: grid; grid-template-columns: repeat(4,1fr); gap: 1.2rem; }
