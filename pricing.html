@@ -31,8 +31,17 @@
     .pricing-layout { display:grid; grid-template-columns: 1fr 320px; gap: clamp(2rem,4vw,3rem); align-items:start; }
     .price-search { width:100%; padding:.85rem 1.1rem; border:1.5px solid var(--line); border-radius:var(--r-pill); font-family:var(--font-body); font-size:1rem; margin-bottom:2rem; }
     .price-search:focus { outline:none; border-color:var(--magenta); }
-    .price-group { margin-bottom:2.2rem; }
-    .price-group h2 { font-size:1.5rem; color:var(--magenta); padding-bottom:.5rem; border-bottom:2px solid var(--lime); display:inline-block; }
+    .price-group { margin-bottom:.9rem; border:1px solid var(--line); border-radius:var(--r-md); background:#fff; box-shadow:var(--shadow-sm); overflow:hidden; }
+    .price-group > summary { list-style:none; cursor:pointer; display:flex; align-items:center; gap:.8rem; padding:1.05rem 1.3rem; }
+    .price-group > summary::-webkit-details-marker { display:none; }
+    .price-group > summary h2 { font-size:1.35rem; color:var(--magenta); margin:0; border:0; }
+    .price-group > summary:hover h2 { color:var(--magenta-deep); }
+    .price-group .cat-count { margin-left:auto; color:var(--ink-soft); font-size:.85rem; font-weight:500; white-space:nowrap; }
+    .price-group .chev { flex:none; width:20px; height:20px; color:var(--magenta); transition:transform .25s ease; }
+    .price-group[open] .chev { transform:rotate(180deg); }
+    .price-group[open] > summary { border-bottom:1px solid var(--line); }
+    .price-group-body { padding:.6rem 1.3rem 1.3rem; }
+    .price-group-body > .price-sub:first-child { margin-top:.2rem; }
     .price-sub { font-family:var(--font-display); font-weight:500; margin:1.2rem 0 .3rem; color:var(--ink); }
     .price-row { display:flex; justify-content:space-between; gap:1rem; padding:.5rem 0; border-bottom:1px dashed var(--line); font-size:.96rem; }
     .price-row.indent { padding-left:1.2rem; color:var(--ink-soft); }
@@ -123,8 +132,9 @@
         <input type="search" class="price-search" id="priceFilter" placeholder="Filter items… (e.g. shirt, duvet, suit)" aria-label="Filter price list">
         <p class="no-results" id="noResults">No items match your search.</p>
 
-        <div class="price-group">
-          <h2>Dry Cleaning</h2>
+        <details class="price-group">
+          <summary><h2>Dry Cleaning</h2><span class="cat-count"></span><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m6 9 6 6 6-6"/></svg></summary>
+          <div class="price-group-body">
           <div class="price-sub">Dress</div>
           <div class="price-row indent"><span>Cocktail Dress</span><span class="amt">£22.30</span></div>
           <div class="price-row indent"><span>Dress</span><span class="amt">£13.70</span></div>
@@ -238,17 +248,21 @@
           <div class="price-row indent"><span>3 Piece Suite Full Set</span><span class="amt">£102.50</span></div>
           <div class="price-row indent"><span>3 Seater Sofa Cover</span><span class="amt">£40.00</span></div>
           <div class="price-row indent"><span>Armchair Cover</span><span class="amt">£17.50</span></div>
-        </div>
+          </div>
+        </details>
 
-        <div class="price-group">
-          <h2>Laundry</h2>
+        <details class="price-group">
+          <summary><h2>Laundry</h2><span class="cat-count"></span><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m6 9 6 6 6-6"/></svg></summary>
+          <div class="price-group-body">
           <div class="price-row"><span>Cleveland Bay Service Wash</span><span class="amt">£25.00</span></div>
           <div class="price-row"><span>Service Wash</span><span class="amt">£12.40</span></div>
           <div class="price-row"><span>Dry Only</span><span class="amt">£10.40</span></div>
-        </div>
+          </div>
+        </details>
 
-        <div class="price-group">
-          <h2>Ironing</h2>
+        <details class="price-group">
+          <summary><h2>Ironing</h2><span class="cat-count"></span><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m6 9 6 6 6-6"/></svg></summary>
+          <div class="price-group-body">
           <div class="price-row"><span>Basic Ironing</span><span class="amt">£1.20</span></div>
           <div class="price-row"><span>Child Basic</span><span class="amt">£1.00</span></div>
           <div class="price-row"><span>Dress P/O</span><span class="amt">£8.30</span></div>
@@ -281,10 +295,12 @@
           <div class="price-row indent"><span>Creased Front P/O</span><span class="amt">£5.20</span></div>
           <div class="price-row indent"><span>Flat Front P/O</span><span class="amt">£2.60</span></div>
           <div class="price-row"><span>Tunic/Uniform P/O</span><span class="amt">£3.40</span></div>
-        </div>
+          </div>
+        </details>
 
-        <div class="price-group">
-          <h2>Duvets / Quilts</h2>
+        <details class="price-group">
+          <summary><h2>Duvets / Quilts</h2><span class="cat-count"></span><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m6 9 6 6 6-6"/></svg></summary>
+          <div class="price-group-body">
           <div class="price-sub">Bedspread</div>
           <div class="price-row indent"><span>Bedspread Double</span><span class="amt">£20.00</span></div>
           <div class="price-row indent"><span>Bedspread Kingsize</span><span class="amt">£21.10</span></div>
@@ -302,7 +318,8 @@
           <div class="price-sub">Pillow</div>
           <div class="price-row indent"><span>Pillow Feather</span><span class="amt">£8.00</span></div>
           <div class="price-row indent"><span>Pillow Poly</span><span class="amt">£6.80</span></div>
-        </div>
+          </div>
+        </details>
       </div>
 
       <aside class="price-aside">
@@ -373,8 +390,17 @@
           sub.style.display = show ? '' : 'none';
         });
         group.style.display = groupVisible ? '' : 'none';
+        // Auto-expand categories with matches while searching; collapse when cleared
+        group.open = q ? groupVisible : false;
       });
       noResults.style.display = anyVisible ? 'none' : 'block';
+    });
+
+    // Show an item count in each collapsed category header
+    document.querySelectorAll('.price-group').forEach(group => {
+      const n = group.querySelectorAll('.price-row').length;
+      const badge = group.querySelector('.cat-count');
+      if (badge) badge.textContent = n + (n === 1 ? ' item' : ' items');
     });
   </script>
 </body>
