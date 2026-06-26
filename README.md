@@ -44,11 +44,14 @@ in the Netlify dashboard once deployed.
 
 ## Live pricing
 
-The price list on `pricing.html` is fed from The Ironing Man pricing API so it
-stays in sync with live prices instead of being hand-maintained.
+The price list on `pricing.html` is fed from CleanCloud (cleancloudapp.com) —
+The Ironing Man's POS platform — so it stays in sync with live prices instead of
+being hand-maintained.
 
-- `netlify/functions/pricing.mjs` proxies the API **server-side** and is exposed
-  at `/api/pricing`. The API key never reaches the browser.
+- `netlify/functions/pricing.mjs` calls the CleanCloud API **server-side** and is
+  exposed at `/api/pricing`. The API key never reaches the browser. It POSTs to
+  `https://cleancloudapp.com/api/getProducts` with the token in the body, then
+  groups the returned products by category.
 - `assets/pricing.js` fetches `/api/pricing` on load and renders the list. If the
   request fails, the static prices in `pricing.html` are shown as a fallback, so
   the page is never broken.
@@ -57,11 +60,13 @@ stays in sync with live prices instead of being hand-maintained.
 
 | Variable | Required | Purpose |
 |----------|----------|---------|
-| `LL_API_PRICING_KEY` | yes | Secret API key (already set in Netlify). Never commit this. |
-| `LL_API_PRICING_URL` | yes | Upstream pricing endpoint URL. |
-| `LL_API_PRICING_AUTH` | no | How the key is sent: `bearer` (default), `header`, or `query`. |
-| `LL_API_PRICING_HEADER` | no | Header name when `AUTH=header` (default `x-api-key`). |
-| `LL_API_PRICING_QUERY` | no | Query param name when `AUTH=query` (default `key`). |
+| `LL_API_PRICING_KEY` | yes | CleanCloud API token (already set in Netlify). Never commit this. |
+| `LL_API_PRICING_URL` | no | Override the endpoint (default `https://cleancloudapp.com/api/getProducts`). |
+| `LL_API_PRICELIST_ID` | no | CleanCloud price list ID, if not using the default list. |
+
+Visit `/api/pricing` directly to debug: it returns the live JSON, or a small
+error object (`upstream_error`, `cleancloud_error`, `bad_upstream_payload`)
+describing what went wrong.
 
 The static fallback prices in `pricing.html` should be refreshed occasionally so
 they remain a sensible backup.
