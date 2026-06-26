@@ -122,9 +122,46 @@ h1, h2, h3, h4 {
   padding: .5rem 0;
 }
 .topbar a { text-decoration: none; opacity: .95; }
-.topbar .ti { display: inline-flex; align-items: center; gap: .4rem; }
+.topbar .ti { display: inline-flex; align-items: center; gap: .4rem; white-space: nowrap; }
 .topbar .spacer { margin-left: auto; }
 .topbar svg { width: 14px; height: 14px; flex: none; }
+/* Ticker track (added by main.js). On desktop it lays out exactly like the
+   normal row and the cloned items are hidden. */
+.topbar-track {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .4rem 1.4rem;
+  align-items: center;
+  width: 100%;
+}
+.topbar-track > [aria-hidden="true"] { display: none; }
+
+/* Mobile: a gently auto-scrolling, swipeable ticker so all details stay on one
+   line instead of wrapping into a cramped block. */
+@media (max-width: 760px) {
+  .topbar .wrap:has(.topbar-track) { flex-wrap: nowrap; overflow: hidden; }
+  .topbar-track {
+    flex-wrap: nowrap;
+    width: max-content;
+    gap: 0;
+    animation: topbar-ticker 24s linear infinite;
+  }
+  .topbar-track > [aria-hidden="true"] { display: inline-flex; }
+  .topbar .ti { margin-right: 2.4rem; }
+  .topbar .spacer { margin-left: 0; }
+  .topbar .wrap:hover .topbar-track,
+  .topbar-track:active { animation-play-state: paused; }
+}
+@keyframes topbar-ticker {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+/* Reduced motion: no auto-scroll — a static, swipeable single row instead. */
+@media (max-width: 760px) and (prefers-reduced-motion: reduce) {
+  .topbar .wrap:has(.topbar-track) { overflow-x: auto; }
+  .topbar-track { animation: none; width: max-content; }
+  .topbar-track > [aria-hidden="true"] { display: none; }
+}
 
 /* ---------- Header / nav ---------- */
 .site-header {
