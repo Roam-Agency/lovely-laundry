@@ -11,6 +11,25 @@ if (toggle && links) {
   );
 }
 
+// Top bar ticker (mobile): wrap the contact items in a track and clone them so
+// the marquee loops seamlessly. On desktop the clones are hidden via CSS and the
+// bar lays out as before; if this script doesn't run, the original items still
+// show normally.
+const topWrap = document.querySelector('.topbar .wrap');
+if (topWrap && !topWrap.querySelector('.topbar-track')) {
+  const track = document.createElement('div');
+  track.className = 'topbar-track';
+  while (topWrap.firstChild) track.appendChild(topWrap.firstChild);
+  [...track.children].forEach((node) => {
+    const clone = node.cloneNode(true);
+    clone.setAttribute('aria-hidden', 'true');
+    clone.setAttribute('tabindex', '-1');
+    clone.querySelectorAll('a').forEach((a) => a.setAttribute('tabindex', '-1'));
+    track.appendChild(clone);
+  });
+  topWrap.appendChild(track);
+}
+
 // Scroll reveal (respects reduced-motion)
 const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 const revealEls = document.querySelectorAll('.reveal');
