@@ -24,9 +24,11 @@
 const UPSTREAM_URL = process.env.LL_API_PRICING_URL || 'https://cleancloudapp.com/api/getProducts';
 const PRICE_LIST_ID = process.env.LL_API_PRICELIST_ID || '';
 
-export default async () => {
+export default async (request) => {
   const key = process.env.LL_API_PRICING_KEY;
   if (!key) return json({ error: 'not_configured', detail: 'LL_API_PRICING_KEY is not set' }, 503);
+
+  const debug = new URL(request.url).searchParams.get('debug') === '1';
 
   const payload = { api_token: key };
   if (PRICE_LIST_ID) payload.priceListID = PRICE_LIST_ID;
@@ -61,6 +63,27 @@ export default async () => {
   // CleanCloud signals failures (e.g. a bad token) with success:"0" and an error.
   if (data && (data.success === '0' || data.success === 0 || data.success === false)) {
     return json({ error: 'cleancloud_error', detail: str(data.error) || 'request rejected' }, 502);
+  }
+
+  // Temporary diagnostics: /api/pricing?debug=1 reports the upstream structure
+  // (field names + the distinct values of likely category fields) so the
+  // category mapping can be confirmed against the real data. No prices rendered.
+  if (debug) {
+    const list = firstArray(data?.Products, data?.products, Array.isArray(data) ? data : null, data?.data) || [];
+    const sample = list[0] || null;
+    const categoryFieldValues = {};
+    for (const k of ['category', 'categoryName', 'categoryID', 'categoryId', 'productCategory', 'type', 'categoryTitle']) {
+      const vals = [...new Set(list.map((p) => p?.[k]).filter((v) => v !== undefined && v !== null))];
+      if (vals.length) categoryFieldValues[k] = vals.slice(0, 50);
+    }
+    return json({
+      debug: true,
+      topLevelKeys: data && typeof data === 'object' ? Object.keys(data) : typeof data,
+      productCount: list.length,
+      productKeys: sample ? Object.keys(sample) : [],
+      sampleProduct: sample,
+      categoryFieldValues,
+    });
   }
 
   const categories = normalise(data);
