@@ -52,6 +52,8 @@
     .price-aside p { color:var(--ink-soft); font-size:.95rem; }
     .price-aside .btn { width:100%; justify-content:center; margin-top:.6rem; }
     .no-results { color:var(--ink-soft); font-style:italic; padding:1rem 0; display:none; }
+    .price-status { display:inline-flex; align-items:center; gap:.45rem; margin:-1rem 0 1.5rem; padding:.3rem .7rem; border-radius:var(--r-pill); background:rgba(181,212,14,.18); color:var(--magenta-deep); font-size:.82rem; font-weight:500; }
+    .price-status::before { content:""; width:7px; height:7px; border-radius:50%; background:var(--lime); box-shadow:0 0 0 3px rgba(181,212,14,.3); }
     @media (max-width:860px){ .pricing-layout{ grid-template-columns:1fr; } .price-aside{ position:static; } }
   </style>
   <script type="application/ld+json">
@@ -130,8 +132,13 @@
     <div class="wrap pricing-layout">
       <div>
         <input type="search" class="price-search" id="priceFilter" placeholder="Filter items… (e.g. shirt, duvet, suit)" aria-label="Filter price list">
+        <p class="price-status" id="priceStatus" hidden></p>
         <p class="no-results" id="noResults">No items match your search.</p>
 
+        <!-- Static fallback prices. When the live pricing API is reachable,
+             assets/pricing.js replaces these with live figures from The Ironing
+             Man. They are kept current as a sensible fallback if the API is down. -->
+        <div id="priceList">
         <details class="price-group">
           <summary><h2>Dry Cleaning</h2><span class="cat-count"></span><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m6 9 6 6 6-6"/></svg></summary>
           <div class="price-group-body">
@@ -320,6 +327,7 @@
           <div class="price-row indent"><span>Pillow Poly</span><span class="amt">£6.80</span></div>
           </div>
         </details>
+        </div>
       </div>
 
       <aside class="price-aside">
@@ -365,43 +373,6 @@
   </footer>
 
   <script src="assets/main.js?v=2"></script>
-  <script>
-    // Live price filter — hides non-matching rows and empty groups
-    const filter = document.getElementById('priceFilter');
-    const noResults = document.getElementById('noResults');
-    filter.addEventListener('input', () => {
-      const q = filter.value.trim().toLowerCase();
-      let anyVisible = false;
-      document.querySelectorAll('.price-group').forEach(group => {
-        let groupVisible = false;
-        // rows
-        group.querySelectorAll('.price-row').forEach(row => {
-          const match = !q || row.textContent.toLowerCase().includes(q);
-          row.style.display = match ? '' : 'none';
-          if (match) { groupVisible = true; anyVisible = true; }
-        });
-        // sub-headers: show only if a following row in same sub is visible
-        group.querySelectorAll('.price-sub').forEach(sub => {
-          let n = sub.nextElementSibling, show = false;
-          while (n && n.classList.contains('price-row') && n.classList.contains('indent')) {
-            if (n.style.display !== 'none') { show = true; break; }
-            n = n.nextElementSibling;
-          }
-          sub.style.display = show ? '' : 'none';
-        });
-        group.style.display = groupVisible ? '' : 'none';
-        // Auto-expand categories with matches while searching; collapse when cleared
-        group.open = q ? groupVisible : false;
-      });
-      noResults.style.display = anyVisible ? 'none' : 'block';
-    });
-
-    // Show an item count in each collapsed category header
-    document.querySelectorAll('.price-group').forEach(group => {
-      const n = group.querySelectorAll('.price-row').length;
-      const badge = group.querySelector('.cat-count');
-      if (badge) badge.textContent = n + (n === 1 ? ' item' : ' items');
-    });
-  </script>
+  <script src="assets/pricing.js?v=1"></script>
 </body>
 </html>

@@ -1,6 +1,19 @@
 [build]
   publish = "."
 
+# Serverless functions (live pricing proxy). The pricing API key is read from
+# the LL_API_PRICING_KEY environment variable inside the function and is never
+# exposed to the browser.
+[functions]
+  directory = "netlify/functions"
+  node_bundler = "esbuild"
+
+# Clean public path for the live pricing function.
+[[redirects]]
+  from = "/api/pricing"
+  to = "/.netlify/functions/pricing"
+  status = 200
+
 # Legacy path -> Visit Us page
 [[redirects]]
   from = "/visit-store"
@@ -30,6 +43,11 @@
 
 [[headers]]
   for = "/assets/main.js"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
+
+[[headers]]
+  for = "/assets/pricing.js"
   [headers.values]
     Cache-Control = "public, max-age=0, must-revalidate"
 

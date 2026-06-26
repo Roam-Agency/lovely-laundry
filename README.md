@@ -42,6 +42,30 @@ python3 -m http.server 8080
 Contact forms use Netlify Forms (`data-netlify="true"`); submissions appear
 in the Netlify dashboard once deployed.
 
+## Live pricing
+
+The price list on `pricing.html` is fed from The Ironing Man pricing API so it
+stays in sync with live prices instead of being hand-maintained.
+
+- `netlify/functions/pricing.mjs` proxies the API **server-side** and is exposed
+  at `/api/pricing`. The API key never reaches the browser.
+- `assets/pricing.js` fetches `/api/pricing` on load and renders the list. If the
+  request fails, the static prices in `pricing.html` are shown as a fallback, so
+  the page is never broken.
+
+### Required Netlify environment variables
+
+| Variable | Required | Purpose |
+|----------|----------|---------|
+| `LL_API_PRICING_KEY` | yes | Secret API key (already set in Netlify). Never commit this. |
+| `LL_API_PRICING_URL` | yes | Upstream pricing endpoint URL. |
+| `LL_API_PRICING_AUTH` | no | How the key is sent: `bearer` (default), `header`, or `query`. |
+| `LL_API_PRICING_HEADER` | no | Header name when `AUTH=header` (default `x-api-key`). |
+| `LL_API_PRICING_QUERY` | no | Query param name when `AUTH=query` (default `key`). |
+
+The static fallback prices in `pricing.html` should be refreshed occasionally so
+they remain a sensible backup.
+
 ## Brand
 
 - Magenta `#9c1d8f`, plum `#4a0f4d`, lime accent `#b5d40e`
