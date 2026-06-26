@@ -20,7 +20,7 @@
 //   LL_API_PRICING_HEADER(optional)  header name when AUTH = "header" (default "x-api-key")
 //   LL_API_PRICING_QUERY (optional)  query param name when AUTH = "query" (default "key")
 
-const UPSTREAM_URL = process.env.LL_API_PRICING_URL || '';
+const UPSTREAM_URL = process.env.LL_API_PRICING_URL || 'https://ironing-man.co.uk/pricing';
 const AUTH_STYLE = (process.env.LL_API_PRICING_AUTH || 'bearer').toLowerCase();
 const AUTH_HEADER = process.env.LL_API_PRICING_HEADER || 'x-api-key';
 const AUTH_QUERY = process.env.LL_API_PRICING_QUERY || 'key';
@@ -43,13 +43,21 @@ export default async () => {
     return json({ error: 'upstream_unreachable' }, 502);
   }
 
-  if (!upstream.ok) return json({ error: 'upstream_error', status: upstream.status }, 502);
+  if (!upstream.ok) {
+    // Surface a short, non-sensitive excerpt of the upstream error to make
+    // misconfiguration (wrong auth scheme, wrong URL) easy to diagnose by
+    // visiting /api/pricing directly.
+    const detail = (await upstream.text().catch(() => '')).slice(0, 200);
+    return json({ error: 'upstream_error', status: upstream.status, detail }, 502);
+  }
 
+  const raw = await upstream.text();
   let data;
   try {
-    data = await upstream.json();
+    data = JSON.parse(raw);
   } catch {
-    return json({ error: 'bad_upstream_payload' }, 502);
+    // Likely an HTML page rather than a JSON API — include a hint.
+    return json({ error: 'bad_upstream_payload', hint: raw.slice(0, 120) }, 502);
   }
 
   const categories = normalise(data);
