@@ -14,6 +14,23 @@
   to = "/.netlify/functions/pricing"
   status = 200
 
+# Common mistypes of the pricing page -> the real Pricing page, so they never
+# land on a 404.
+[[redirects]]
+  from = "/prices"
+  to = "/pricing.html"
+  status = 301
+
+[[redirects]]
+  from = "/prices.html"
+  to = "/pricing.html"
+  status = 301
+
+[[redirects]]
+  from = "/pricing"
+  to = "/pricing.html"
+  status = 301
+
 # Legacy path -> Visit Us page
 [[redirects]]
   from = "/visit-store"
