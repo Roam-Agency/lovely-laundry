@@ -1,22 +1,23 @@
 // Pricing page behaviour.
 //
-// On load this tries to fetch live prices from /api/pricing (a Netlify function
-// that proxies The Ironing Man API server-side — the API key never reaches the
-// browser). On success it replaces the price list with the live figures. If the
-// request fails for any reason, the static prices already in the HTML are left
-// in place as a fallback, so the page is never broken.
+// On load this fetches live prices from /api/pricing (a Netlify function that
+// proxies the CleanCloud API server-side — the API key never reaches the
+// browser) and renders them grouped by category. If the request fails, the
+// static prices already in the HTML are left in place as a fallback so the page
+// is never broken.
 //
-// The category filter and per-category item counts are wired up here too, so
-// they work whether the prices are live or the static fallback.
+// It also builds a category "jump" nav, wires the search filter, and shows a
+// per-category item count — working whether the prices are live or the fallback.
 
 (function () {
   const list = document.getElementById('priceList');
   const status = document.getElementById('priceStatus');
+  const nav = document.getElementById('priceNav');
 
   attachFilter();
 
   if (!list) {
-    refreshCounts();
+    afterRender();
     return;
   }
 
@@ -27,12 +28,12 @@
         throw new Error('empty');
       }
       render(list, data.categories);
-      refreshCounts();
+      afterRender({ openFirst: true });
       showStatus('Live prices' + (data.updatedAt ? ' · updated ' + formatDate(data.updatedAt) : ''));
     })
     .catch(() => {
       // Keep the static fallback prices already in the DOM.
-      refreshCounts();
+      afterRender();
     });
 
   // --- Rendering ------------------------------------------------------------
@@ -43,7 +44,10 @@
       const details = el('details', 'price-group');
 
       const summary = el('summary');
-      summary.appendChild(el('h2', null, cat.name));
+      const head = el('span', 'pg-head');
+      head.insertAdjacentHTML('beforeend', iconFor(cat.name));
+      head.appendChild(el('h2', null, cat.name));
+      summary.appendChild(head);
       summary.appendChild(el('span', 'cat-count'));
       summary.insertAdjacentHTML(
         'beforeend',
@@ -57,7 +61,9 @@
         (group.items || []).forEach((item) => {
           const row = el('div', 'price-row' + (group.name ? ' indent' : ''));
           row.appendChild(el('span', null, item.name));
-          row.appendChild(el('span', 'amt', formatPrice(item.price)));
+          const amt = el('span', 'amt', formatPrice(item.price));
+          if (item.price == null) amt.classList.add('poa');
+          row.appendChild(amt);
           body.appendChild(row);
         });
       });
@@ -66,6 +72,41 @@
     });
 
     container.replaceChildren(frag);
+  }
+
+  function afterRender(opts) {
+    refreshCounts();
+    buildNav();
+    if (opts && opts.openFirst) {
+      const first = document.querySelector('.price-group');
+      if (first) first.open = true;
+    }
+  }
+
+  // --- Category jump nav ----------------------------------------------------
+
+  function buildNav() {
+    if (!nav) return;
+    const groups = [...document.querySelectorAll('.price-group')];
+    if (groups.length < 2) {
+      nav.hidden = true;
+      return;
+    }
+    nav.replaceChildren();
+    groups.forEach((group, i) => {
+      const h2 = group.querySelector('h2');
+      if (!h2) return;
+      const name = h2.textContent;
+      group.id = group.id || 'cat-' + i;
+      const pill = el('button', 'price-pill', name);
+      pill.type = 'button';
+      pill.addEventListener('click', () => {
+        group.open = true;
+        group.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+      nav.appendChild(pill);
+    });
+    nav.hidden = false;
   }
 
   // --- Filter + counts (work on whatever rows are currently in the DOM) -----
@@ -101,7 +142,7 @@
           sub.style.display = show ? '' : 'none';
         });
         group.style.display = groupVisible ? '' : 'none';
-        group.open = q ? groupVisible : false;
+        group.open = q ? groupVisible : group.open;
       });
       if (noResults) noResults.style.display = anyVisible ? 'none' : 'block';
     });
@@ -124,8 +165,10 @@
   }
 
   function formatPrice(value) {
+    if (value == null) return 'POA';
     const n = typeof value === 'number' ? value : parseFloat(value);
-    return isFinite(n) ? '£' + n.toFixed(2) : '';
+    if (!isFinite(n) || n <= 0) return 'POA';
+    return '£' + n.toFixed(2);
   }
 
   function formatDate(iso) {
@@ -139,5 +182,24 @@
     if (className) node.className = className;
     if (text != null) node.textContent = text;
     return node;
+  }
+
+  // Pick a category icon from the category name. Falls back to a price tag.
+  function iconFor(name) {
+    const n = (name || '').toLowerCase();
+    const svg = (paths) =>
+      '<svg class="pg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">' +
+      paths +
+      '</svg>';
+    if (n.includes('iron')) return svg('<path d="M3 15h13v-2a6 6 0 0 0-6-6H6L3 13Z"/><path d="M3 15v3h13"/><path d="M19 7l1.5 1.5"/>');
+    if (n.includes('wash') || n.includes('fold') || n.includes('laundry') || n.includes('service'))
+      return svg('<rect x="4" y="3" width="16" height="18" rx="2"/><circle cx="12" cy="13" r="4"/><path d="M7 6h.01M10 6h.01"/>');
+    if (n.includes('dry clean') || n.includes('dry-clean') || n.includes('suit') || n.includes('dress'))
+      return svg('<path d="M12 4a1.8 1.8 0 1 0 1.6 2.6L12 8l8.5 5.4a1 1 0 0 1 .5.9V15a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-.7a1 1 0 0 1 .5-.9L12 8"/>');
+    if (n.includes('commercial') || n.includes('business') || n.includes('trade'))
+      return svg('<rect x="5" y="3" width="14" height="18" rx="1.5"/><path d="M9 7h.01M13 7h.01M9 11h.01M13 11h.01M10 21v-3h4v3"/>');
+    if (n.includes('duvet') || n.includes('bed') || n.includes('quilt'))
+      return svg('<path d="M3 18v-5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v5"/><path d="M3 18h18M3 13V8"/><path d="M7 11V9a1 1 0 0 1 1-1h8a1 1 0 0 1 1 1v2"/>');
+    return svg('<path d="M3 12V5a2 2 0 0 1 2-2h7l9 9-9 9-9-9Z"/><circle cx="8" cy="8" r="1.4"/>');
   }
 })();

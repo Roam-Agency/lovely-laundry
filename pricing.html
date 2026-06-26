@@ -31,21 +31,30 @@
     .pricing-layout { display:grid; grid-template-columns: 1fr 320px; gap: clamp(2rem,4vw,3rem); align-items:start; }
     .price-search { width:100%; padding:.85rem 1.1rem; border:1.5px solid var(--line); border-radius:var(--r-pill); font-family:var(--font-body); font-size:1rem; margin-bottom:2rem; }
     .price-search:focus { outline:none; border-color:var(--magenta); }
-    .price-group { margin-bottom:.9rem; border:1px solid var(--line); border-radius:var(--r-md); background:#fff; box-shadow:var(--shadow-sm); overflow:hidden; }
-    .price-group > summary { list-style:none; cursor:pointer; display:flex; align-items:center; gap:.8rem; padding:1.05rem 1.3rem; }
+    .price-group { margin-bottom:.85rem; border:1px solid var(--line); border-radius:var(--r-md); background:#fff; box-shadow:var(--shadow-sm); overflow:hidden; transition:box-shadow .2s ease, border-color .2s ease; }
+    .price-group[open] { box-shadow:var(--shadow-md); border-color:transparent; }
+    .price-group > summary { list-style:none; cursor:pointer; display:flex; align-items:center; gap:.9rem; padding:1.05rem 1.3rem; }
     .price-group > summary::-webkit-details-marker { display:none; }
-    .price-group > summary h2 { font-size:1.35rem; color:var(--magenta); margin:0; border:0; }
+    .price-group > summary:hover { background:var(--cream); }
+    .pg-head { display:flex; align-items:center; gap:.85rem; min-width:0; }
+    .pg-icon { flex:none; width:42px; height:42px; padding:9px; border-radius:12px; background:var(--cream); color:var(--magenta); }
+    .price-group[open] .pg-icon { background:var(--grad-brand); color:#fff; }
+    .price-group > summary h2 { font-size:1.3rem; color:var(--ink); margin:0; border:0; line-height:1.1; }
     .price-group > summary:hover h2 { color:var(--magenta-deep); }
-    .price-group .cat-count { margin-left:auto; color:var(--ink-soft); font-size:.85rem; font-weight:500; white-space:nowrap; }
+    .price-group .cat-count { margin-left:auto; color:var(--magenta-deep); background:rgba(156,29,143,.08); font-size:.78rem; font-weight:600; white-space:nowrap; padding:.25rem .6rem; border-radius:var(--r-pill); }
     .price-group .chev { flex:none; width:20px; height:20px; color:var(--magenta); transition:transform .25s ease; }
     .price-group[open] .chev { transform:rotate(180deg); }
     .price-group[open] > summary { border-bottom:1px solid var(--line); }
-    .price-group-body { padding:.6rem 1.3rem 1.3rem; }
+    .price-group-body { padding:.5rem 1.3rem 1.1rem; display:grid; grid-template-columns:repeat(2, minmax(0,1fr)); gap:0 2.2rem; }
     .price-group-body > .price-sub:first-child { margin-top:.2rem; }
-    .price-sub { font-family:var(--font-display); font-weight:500; margin:1.2rem 0 .3rem; color:var(--ink); }
-    .price-row { display:flex; justify-content:space-between; gap:1rem; padding:.5rem 0; border-bottom:1px dashed var(--line); font-size:.96rem; }
-    .price-row.indent { padding-left:1.2rem; color:var(--ink-soft); }
-    .price-row .amt { font-family:var(--font-display); font-weight:500; color:var(--ink); white-space:nowrap; }
+    .price-sub { grid-column:1/-1; font-family:var(--font-display); font-weight:600; margin:1.2rem 0 .2rem; color:var(--magenta); font-size:.95rem; }
+    .price-row { display:flex; justify-content:space-between; align-items:baseline; gap:1rem; padding:.55rem 0; border-bottom:1px dashed var(--line); font-size:.96rem; }
+    .price-row.indent { padding-left:1rem; color:var(--ink-soft); }
+    .price-row .amt { font-family:var(--font-display); font-weight:600; color:var(--ink); white-space:nowrap; }
+    .price-row .amt.poa { font-size:.78rem; font-weight:500; color:var(--ink-soft); letter-spacing:.03em; }
+    .price-nav { display:flex; flex-wrap:wrap; gap:.5rem; margin:0 0 1.6rem; }
+    .price-pill { font-family:var(--font-body); font-size:.85rem; font-weight:500; color:var(--magenta-deep); background:#fff; border:1.5px solid var(--line); border-radius:var(--r-pill); padding:.45rem .95rem; cursor:pointer; transition:all .15s ease; }
+    .price-pill:hover { border-color:var(--magenta); background:var(--cream); color:var(--magenta); }
     .price-aside { position:sticky; top:90px; background:#fff; border:1px solid var(--line); border-radius:var(--r-lg); padding:1.8rem; box-shadow:var(--shadow-md); text-align:center; }
     .price-aside img { height:120px; margin:0 auto 1rem; }
     .price-aside h3 { font-size:1.3rem; }
@@ -55,6 +64,7 @@
     .price-status { display:inline-flex; align-items:center; gap:.45rem; margin:-1rem 0 1.5rem; padding:.3rem .7rem; border-radius:var(--r-pill); background:rgba(181,212,14,.18); color:var(--magenta-deep); font-size:.82rem; font-weight:500; }
     .price-status::before { content:""; width:7px; height:7px; border-radius:50%; background:var(--lime); box-shadow:0 0 0 3px rgba(181,212,14,.3); }
     @media (max-width:860px){ .pricing-layout{ grid-template-columns:1fr; } .price-aside{ position:static; } }
+    @media (max-width:560px){ .price-group-body{ grid-template-columns:1fr; } }
   </style>
   <script type="application/ld+json">
   {
@@ -133,6 +143,7 @@
       <div>
         <input type="search" class="price-search" id="priceFilter" placeholder="Filter items… (e.g. shirt, duvet, suit)" aria-label="Filter price list">
         <p class="price-status" id="priceStatus" hidden></p>
+        <nav class="price-nav" id="priceNav" aria-label="Jump to category" hidden></nav>
         <p class="no-results" id="noResults">No items match your search.</p>
 
         <!-- Static fallback prices. When the live pricing API is reachable,
@@ -373,6 +384,6 @@
   </footer>
 
   <script src="assets/main.js?v=2"></script>
-  <script src="assets/pricing.js?v=1"></script>
+  <script src="assets/pricing.js?v=2"></script>
 </body>
 </html>

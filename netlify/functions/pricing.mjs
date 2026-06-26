@@ -24,11 +24,9 @@
 const UPSTREAM_URL = process.env.LL_API_PRICING_URL || 'https://cleancloudapp.com/api/getProducts';
 const PRICE_LIST_ID = process.env.LL_API_PRICELIST_ID || '';
 
-export default async (request) => {
+export default async () => {
   const key = process.env.LL_API_PRICING_KEY;
   if (!key) return json({ error: 'not_configured', detail: 'LL_API_PRICING_KEY is not set' }, 503);
-
-  const debug = new URL(request.url).searchParams.get('debug') === '1';
 
   const payload = { api_token: key };
   if (PRICE_LIST_ID) payload.priceListID = PRICE_LIST_ID;
@@ -65,31 +63,6 @@ export default async (request) => {
     return json({ error: 'cleancloud_error', detail: str(data.error) || 'request rejected' }, 502);
   }
 
-  // Temporary diagnostics: /api/pricing?debug=1 reports the upstream structure
-  // (field names + the distinct values of likely category fields) so the
-  // category mapping can be confirmed against the real data. No prices rendered.
-  if (debug) {
-    const list = firstArray(data?.Products, data?.products, Array.isArray(data) ? data : null, data?.data) || [];
-    const sample = list[0] || null;
-    const categoryFieldValues = {};
-    for (const k of ['category', 'categoryName', 'categoryID', 'categoryId', 'productCategory', 'type', 'categoryTitle']) {
-      const vals = [...new Set(list.map((p) => p?.[k]).filter((v) => v !== undefined && v !== null))];
-      if (vals.length) categoryFieldValues[k] = vals.slice(0, 50);
-    }
-    return json({
-      debug: true,
-      topLevelKeys: data && typeof data === 'object' ? Object.keys(data) : typeof data,
-      productCount: list.length,
-      productKeys: sample ? Object.keys(sample) : [],
-      sampleProduct: sample,
-      categoryFieldValues,
-      sectionsMap: data?.SectionsMap ?? null,
-      distinctSections: [...new Set(list.map((p) => p?.section).filter((v) => v != null))].slice(0, 50),
-      sampleParent: list.find((p) => str(p?.isParent) === '1') || null,
-      sampleChild: list.find((p) => p?.parent != null && str(p?.parent) !== '0') || null,
-    });
-  }
-
   const categories = normalise(data);
   if (!categories.length) return json({ error: 'empty_pricing' }, 502);
 
@@ -111,52 +84,48 @@ export default async (request) => {
 //   [ { name: "Dry Cleaning",
 //       groups: [ { name: null, items: [ { name, price } ] } ] } ]
 //
-// CleanCloud returns a flat product list (typically under "Products"), where
-// each product carries its own category. We group products by category. The
-// field-name lookups are deliberately tolerant so a minor API change won't break
-// rendering. This is the single place to adjust once the real response is seen.
+// CleanCloud returns a flat product list under "Products". Each product has a
+// numeric `section` id; the human category name + display order come from the
+// top-level `SectionsMap` (an array of { id, name, order }). Products are ordered
+// within a section by `sortOrder`. Price 0 / blank means "price on application"
+// and is passed through as null so the page can show "POA".
 function normalise(data) {
-  const flat = firstArray(data?.Products, data?.products, Array.isArray(data) ? data : null, data?.data);
-  if (flat) return groupFlat(flat);
+  const products = firstArray(data?.Products, data?.products, data?.data);
+  if (!products) return [];
 
-  // Fallback: a pre-grouped { categories: [ { name, items } ] } shape.
-  const nested = data?.categories;
-  if (Array.isArray(nested)) return groupNested(nested);
-
-  return [];
-}
-
-function groupFlat(products) {
-  const order = [];
-  const byCat = new Map();
-  for (const p of products) {
-    const name = str(p?.name ?? p?.productName ?? p?.item ?? p?.title);
-    const price = num(p?.price ?? p?.cost ?? p?.amount ?? p?.value);
-    if (!name || price === null) continue;
-    const cat = str(p?.category ?? p?.categoryName ?? p?.productCategory ?? p?.type) || 'Other';
-    if (!byCat.has(cat)) {
-      byCat.set(cat, []);
-      order.push(cat);
+  // section id -> { name, order }
+  const sections = new Map();
+  if (Array.isArray(data?.SectionsMap)) {
+    for (const s of data.SectionsMap) {
+      const id = str(s?.id);
+      if (id) sections.set(id, { name: str(s?.name) || `Section ${id}`, order: num(s?.order) ?? 999 });
     }
-    byCat.get(cat).push({ name, price });
   }
-  return order.map((c) => ({ name: c, groups: [{ name: null, items: byCat.get(c) }] }));
-}
 
-function groupNested(categories) {
-  return categories
-    .map((cat) => {
-      const name = str(cat?.name ?? cat?.category ?? cat?.title);
-      const items = (cat?.items ?? cat?.products ?? [])
-        .map((it) => ({
-          name: str(it?.name ?? it?.item ?? it?.title),
-          price: num(it?.price ?? it?.amount ?? it?.cost),
-        }))
-        .filter((it) => it.name && it.price !== null);
-      if (!name || !items.length) return null;
-      return { name, groups: [{ name: null, items }] };
-    })
-    .filter(Boolean);
+  const bySection = new Map();
+  for (const p of products) {
+    const name = str(p?.name);
+    if (!name) continue;
+    const sectionId = str(p?.section);
+    const sec = sections.get(sectionId) || { name: 'Other', order: 998 };
+    if (!bySection.has(sectionId)) {
+      bySection.set(sectionId, { name: sec.name, order: sec.order, items: [] });
+    }
+    const priceNum = num(p?.price);
+    bySection.get(sectionId).items.push({
+      name,
+      price: priceNum && priceNum > 0 ? priceNum : null, // null -> POA
+      sortOrder: num(p?.sortOrder) ?? 0,
+    });
+  }
+
+  return [...bySection.values()]
+    .filter((c) => c.items.length)
+    .sort((a, b) => a.order - b.order)
+    .map((c) => {
+      c.items.sort((a, b) => a.sortOrder - b.sortOrder || a.name.localeCompare(b.name));
+      return { name: c.name, groups: [{ name: null, items: c.items.map(({ name, price }) => ({ name, price })) }] };
+    });
 }
 
 function firstArray(...candidates) {
