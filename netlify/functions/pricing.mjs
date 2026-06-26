@@ -1,9 +1,9 @@
-// Live pricing proxy for The Ironing Man API.
+// Live pricing proxy for the CleanCloud API (The Ironing Man's POS platform).
 //
 // WHY THIS EXISTS
 // The Lovely Laundry price list used to be hand-maintained HTML, so it drifted
 // out of date whenever the group's live prices changed. This function fetches
-// the current prices from The Ironing Man pricing API and hands them to the
+// the current products from CleanCloud (cleancloudapp.com) and hands them to the
 // pricing page, so the site always shows live figures.
 //
 // SECURITY
@@ -12,52 +12,55 @@
 // and is never sent to the browser. Do not move the key into client-side code
 // or commit it to the repo.
 //
+// CleanCloud API: POST https://cleancloudapp.com/api/getProducts
+//   body: { "api_token": "<key>", "priceListID": <optional> }
+//   docs: https://cleancloudapp.com/api
+//
 // CONFIGURATION (set in Netlify env vars)
-//   LL_API_PRICING_KEY   (required)  the secret API key — already added by the owner
-//   LL_API_PRICING_URL   (required)  the upstream pricing endpoint URL
-//   LL_API_PRICING_AUTH  (optional)  how to send the key: "bearer" (default),
-//                                    "header", or "query"
-//   LL_API_PRICING_HEADER(optional)  header name when AUTH = "header" (default "x-api-key")
-//   LL_API_PRICING_QUERY (optional)  query param name when AUTH = "query" (default "key")
+//   LL_API_PRICING_KEY    (required)  the CleanCloud API token — already added by the owner
+//   LL_API_PRICING_URL    (optional)  override the endpoint (default getProducts)
+//   LL_API_PRICELIST_ID   (optional)  CleanCloud price list ID, if not the default list
 
-const UPSTREAM_URL = process.env.LL_API_PRICING_URL || 'https://ironing-man.co.uk/pricing';
-const AUTH_STYLE = (process.env.LL_API_PRICING_AUTH || 'bearer').toLowerCase();
-const AUTH_HEADER = process.env.LL_API_PRICING_HEADER || 'x-api-key';
-const AUTH_QUERY = process.env.LL_API_PRICING_QUERY || 'key';
+const UPSTREAM_URL = process.env.LL_API_PRICING_URL || 'https://cleancloudapp.com/api/getProducts';
+const PRICE_LIST_ID = process.env.LL_API_PRICELIST_ID || '';
 
 export default async () => {
   const key = process.env.LL_API_PRICING_KEY;
   if (!key) return json({ error: 'not_configured', detail: 'LL_API_PRICING_KEY is not set' }, 503);
-  if (!UPSTREAM_URL) return json({ error: 'not_configured', detail: 'LL_API_PRICING_URL is not set' }, 503);
+
+  const payload = { api_token: key };
+  if (PRICE_LIST_ID) payload.priceListID = PRICE_LIST_ID;
 
   let upstream;
   try {
-    const url = new URL(UPSTREAM_URL);
-    const headers = { Accept: 'application/json' };
-    if (AUTH_STYLE === 'bearer') headers.Authorization = `Bearer ${key}`;
-    else if (AUTH_STYLE === 'header') headers[AUTH_HEADER] = key;
-    else if (AUTH_STYLE === 'query') url.searchParams.set(AUTH_QUERY, key);
-
-    upstream = await fetch(url, { headers, signal: AbortSignal.timeout(8000) });
+    upstream = await fetch(UPSTREAM_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+      body: JSON.stringify(payload),
+      signal: AbortSignal.timeout(8000),
+    });
   } catch {
     return json({ error: 'upstream_unreachable' }, 502);
   }
 
+  const raw = await upstream.text();
+
   if (!upstream.ok) {
-    // Surface a short, non-sensitive excerpt of the upstream error to make
-    // misconfiguration (wrong auth scheme, wrong URL) easy to diagnose by
+    // Short, non-sensitive excerpt to make misconfiguration easy to diagnose by
     // visiting /api/pricing directly.
-    const detail = (await upstream.text().catch(() => '')).slice(0, 200);
-    return json({ error: 'upstream_error', status: upstream.status, detail }, 502);
+    return json({ error: 'upstream_error', status: upstream.status, detail: raw.slice(0, 200) }, 502);
   }
 
-  const raw = await upstream.text();
   let data;
   try {
     data = JSON.parse(raw);
   } catch {
-    // Likely an HTML page rather than a JSON API — include a hint.
     return json({ error: 'bad_upstream_payload', hint: raw.slice(0, 120) }, 502);
+  }
+
+  // CleanCloud signals failures (e.g. a bad token) with success:"0" and an error.
+  if (data && (data.success === '0' || data.success === 0 || data.success === false)) {
+    return json({ error: 'cleancloud_error', detail: str(data.error) || 'request rejected' }, 502);
   }
 
   const categories = normalise(data);
@@ -68,54 +71,70 @@ export default async () => {
     200,
     {
       // Cache at Netlify's edge for 10 minutes and serve stale-while-revalidate,
-      // so prices stay fresh without hammering the upstream API and a brief
-      // outage never breaks the page.
+      // so prices stay fresh without hammering the API and a brief outage never
+      // breaks the page.
       'Cache-Control': 'public, max-age=0, s-maxage=600, stale-while-revalidate=86400',
     }
   );
 };
 
-// --- Map the upstream response to the shape the pricing page renders --------
+// --- Map the CleanCloud response to the shape the pricing page renders ------
 //
 // Normalised output:
 //   [ { name: "Dry Cleaning",
-//       groups: [ { name: "Dress"|null, items: [ { name, price } ] } ] } ]
+//       groups: [ { name: null, items: [ { name, price } ] } ] } ]
 //
-// This mapper is deliberately tolerant of a few common field names so it keeps
-// working if the upstream tweaks its JSON. Once the real response is confirmed,
-// this is the single place to adjust.
+// CleanCloud returns a flat product list (typically under "Products"), where
+// each product carries its own category. We group products by category. The
+// field-name lookups are deliberately tolerant so a minor API change won't break
+// rendering. This is the single place to adjust once the real response is seen.
 function normalise(data) {
-  const rawCategories = data?.categories ?? data?.data ?? data ?? [];
-  if (!Array.isArray(rawCategories)) return [];
+  const flat = firstArray(data?.Products, data?.products, Array.isArray(data) ? data : null, data?.data);
+  if (flat) return groupFlat(flat);
 
-  return rawCategories
+  // Fallback: a pre-grouped { categories: [ { name, items } ] } shape.
+  const nested = data?.categories;
+  if (Array.isArray(nested)) return groupNested(nested);
+
+  return [];
+}
+
+function groupFlat(products) {
+  const order = [];
+  const byCat = new Map();
+  for (const p of products) {
+    const name = str(p?.name ?? p?.productName ?? p?.item ?? p?.title);
+    const price = num(p?.price ?? p?.cost ?? p?.amount ?? p?.value);
+    if (!name || price === null) continue;
+    const cat = str(p?.category ?? p?.categoryName ?? p?.productCategory ?? p?.type) || 'Other';
+    if (!byCat.has(cat)) {
+      byCat.set(cat, []);
+      order.push(cat);
+    }
+    byCat.get(cat).push({ name, price });
+  }
+  return order.map((c) => ({ name: c, groups: [{ name: null, items: byCat.get(c) }] }));
+}
+
+function groupNested(categories) {
+  return categories
     .map((cat) => {
       const name = str(cat?.name ?? cat?.category ?? cat?.title);
-      const rawItems = cat?.items ?? cat?.products ?? cat?.prices ?? [];
-      if (!Array.isArray(rawItems)) return null;
-
-      // Group items by their optional sub-group label, preserving first-seen order.
-      const groupOrder = [];
-      const groups = new Map();
-      for (const it of rawItems) {
-        const itemName = str(it?.name ?? it?.item ?? it?.title ?? it?.description);
-        const price = num(it?.price ?? it?.amount ?? it?.cost ?? it?.value);
-        if (!itemName || price === null) continue;
-        const groupName = str(it?.group ?? it?.subgroup ?? it?.sub ?? it?.section) || '';
-        if (!groups.has(groupName)) {
-          groups.set(groupName, []);
-          groupOrder.push(groupName);
-        }
-        groups.get(groupName).push({ name: itemName, price });
-      }
-
-      const groupList = groupOrder
-        .map((g) => ({ name: g || null, items: groups.get(g) }))
-        .filter((g) => g.items.length);
-      if (!name || !groupList.length) return null;
-      return { name, groups: groupList };
+      const items = (cat?.items ?? cat?.products ?? [])
+        .map((it) => ({
+          name: str(it?.name ?? it?.item ?? it?.title),
+          price: num(it?.price ?? it?.amount ?? it?.cost),
+        }))
+        .filter((it) => it.name && it.price !== null);
+      if (!name || !items.length) return null;
+      return { name, groups: [{ name: null, items }] };
     })
     .filter(Boolean);
+}
+
+function firstArray(...candidates) {
+  for (const c of candidates) if (Array.isArray(c) && c.length) return c;
+  return null;
 }
 
 function str(v) {
