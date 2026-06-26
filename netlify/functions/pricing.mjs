@@ -83,6 +83,10 @@ export default async (request) => {
       productKeys: sample ? Object.keys(sample) : [],
       sampleProduct: sample,
       categoryFieldValues,
+      sectionsMap: data?.SectionsMap ?? null,
+      distinctSections: [...new Set(list.map((p) => p?.section).filter((v) => v != null))].slice(0, 50),
+      sampleParent: list.find((p) => str(p?.isParent) === '1') || null,
+      sampleChild: list.find((p) => p?.parent != null && str(p?.parent) !== '0') || null,
     });
   }
 
